@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Storyteller</title>
+  <style>
+/* Base Theme */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  background: #fff;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Paragraphs */
+#story p {
+  margin: 1rem 0;
+  text-indent: 1.2em;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+
+/* Emphasis */
+#story strong {
+  color: #007aff;
+  font-weight: 600;
+}
+
+/* Horizontal rules */
+#story hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 2rem 0;
+}
+
+/* Links */
+#story a {
+  color: #007aff;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+#story a:hover {
+  border-color: #007aff;
+}
+
+/* Dark Mode */
+.dark-mode {
+  background: #000;
+  color: #fff;
+}
+.dark-mode #story,
+.dark-mode #historyList {
+  background: #333;
+  color: #fff;
+}
+.dark-mode #story hr {
+  border-top-color: #555;
+}
+.dark-mode #story a {
+  color: #0a84ff;
+}
+.dark-mode #story a:hover {
+  border-color: #0a84ff;
+}
+
+/* Container */
+.screen {
+  max-width: 420px;
+  margin: 2rem auto;
+  padding: 1.25rem;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: none;
+}
+.active {
+  display: block;
+}
+
+/* Buttons */
+button, .option-btn {
+  font-size: 17px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #007aff, #0051a8);
+  color: #fff;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  user-select: none;
+}
+button:hover, .option-btn:hover {
+  background: linear-gradient(135deg, #0051a8, #007aff);
+  box-shadow: 0 6px 16px rgba(0, 122, 255, 0.5);
+}
+button:active, .option-btn:active {
+  background: #004080;
+  box-shadow: none;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="range"] {
+  width: 100%;
+  font-size: 17px;
+  padding: 14px 18px;
+  border: 1px solid #ccc;
+  border-radius: 14px;
+  background: #f9f9f9;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+input:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+  outline: none;
+}
+.dark-mode input {
+  background: #222;
+  color: #fff;
+  border-color: #444;
+}
+
+/* Labels */
+label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 1rem 0 0.4rem;
+  color: #666;
+}
+.dark-mode label {
+  color: #aaa;
+}
+
+/* Story/History Box */
+#story, #historyList {
+  background: #f9f9f9;
+  padding: 1.25rem;
+  border-radius: 20px;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-y: auto;
+  max-height: 60vh;
+}
+.dark-mode #story, .dark-mode #historyList {
+  background: #333;
+}
+
+/* History items */
+#historyList p {
+  background: #fff;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  font-weight: 500;
+  color: #007aff;
+  cursor: pointer;
+}
+#historyList p:hover {
+  background: #e6f2ff;
+}
+.dark-mode #historyList p {
+  background: #444;
+  color: #0a84ff;
+}
+.dark-mode #historyList p:hover {
+  background: #555;
+}
+
+/* Back Button */
+.back-btn {
+  background: none;
+  border: none;
+  color: #007aff;
+  font-size: 15px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.back-btn:hover {
+  text-decoration: underline;
+}
+
+/* Top Controls */
+.top-controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  margin: 1rem auto 0;
+  max-width: 420px;
+}
+
+/* Scrollbars */
+#story::-webkit-scrollbar,
+#historyList::-webkit-scrollbar {
+  width: 6px;
+}
+#story::-webkit-scrollbar-thumb,
+#historyList::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+.dark-mode #story::-webkit-scrollbar-thumb,
+.dark-mode #historyList::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .screen {
+    margin: 1rem;
+    border-radius: 16px;
+    padding: 1rem;
+  }
+  input[type="text"],
+  input[type="range"],
+  button {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+  .top-controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="top-controls">
+    <button id="toggleDarkMode">🌙 Toggle Dark Mode</button>
+    <button id="viewHistory">📖 View History</button>
+  </div>
+
+  <!-- Home Screen -->
+  <div id="homeScreen" class="screen active">
+    <h1 style="text-align:center;">AI Storyteller</h1>
+    <div style="text-align:center;">
+      <input id="prompt" type="text" placeholder="Enter your story prompt..." />
+      <div>
+        <label>Story Parts: <span id="partValue">5</span></label><br>
+        <input type="range" id="partCount" min="3" max="10" value="5">
+      </div>
+      <button id="generate">Generate Story</button>
+    </div>
+  </div>
+
+  <!-- Story Screen -->
+  <div id="storyScreen" class="screen">
+    <button class="back-btn" id="backToHome1">⬅ Back</button>
+    <button class="back-btn" id="exportStory">📤 Export as .txt</button>
+    <div id="story"></div>
+    <div id="options"></div>
+  </div>
+
+  <!-- History Screen -->
+  <div id="historyScreen" class="screen">
+    <button class="back-btn" id="backToHome2">⬅ Back</button>
+    <button id="clearHistory">🗑 Delete History</button>
+    <div id="historyList"></div>
+  </div>
+
+  <script type="module">
+    const API_KEY = 'AIzaSyBQy3ins1gqIiNBzKj2cXJcjwe2nuRYJws';
+
+    const screens = {
+      homeScreen: document.getElementById('homeScreen'),
+      storyScreen: document.getElementById('storyScreen'),
+      historyScreen: document.getElementById('historyScreen')
+    };
+
+    const promptInput = document.getElementById('prompt');
+    const partSlider = document.getElementById('partCount');
+    const partValueDisplay = document.getElementById('partValue');
+    const storyDiv = document.getElementById('story');
+    const optionsDiv = document.getElementById('options');
+    const historyList = document.getElementById('historyList');
+
+    const generateBtn = document.getElementById('generate');
+    const viewHistoryBtn = document.getElementById('viewHistory');
+    const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
+    const exportStoryBtn = document.getElementById('exportStory');
+    const clearHistoryBtn = document.getElementById('clearHistory');
+
+    let currentStory = '';
+    let storyHistory = JSON.parse(localStorage.getItem('storyHistory') || '[]');
+
+    function showScreen(screenId) {
+      Object.values(screens).forEach(screen => screen.classList.remove('active'));
+      screens[screenId].classList.add('active');
+    }
+
+    partSlider.addEventListener('input', () => {
+      partValueDisplay.textContent = partSlider.value;
+    });
+
+    toggleDarkModeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    exportStoryBtn.addEventListener('click', () => {
+      const blob = new Blob([currentStory], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'story.txt';
+      a.click();
+    });
+
+    document.getElementById('backToHome1').onclick = () => showScreen('homeScreen');
+    document.getElementById('backToHome2').onclick = () => showScreen('homeScreen');
+
+    viewHistoryBtn.addEventListener('click', () => {
+      showScreen('historyScreen');
+      renderHistory();
+    });
+
+    clearHistoryBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete all story history?')) {
+        storyHistory = [];
+        localStorage.removeItem('storyHistory');
+        renderHistory();
+      }
+    });
+
+    function renderHistory() {
+      historyList.innerHTML = storyHistory.length
+        ? storyHistory.map((s, i) => `<p onclick="loadStory(${i})">#${i + 1}: ${s.slice(0, 100)}...</p>`).join('')
+        : '<p>No story history yet.</p>';
+    }
+
+    function loadStory(index) {
+      currentStory = storyHistory[index];
+      storyDiv.innerHTML = `<p>${currentStory.replace(/\n/g, "<br>")}</p>`;
+      optionsDiv.innerHTML = '';
+      showScreen('storyScreen');
+    }
+
+    async function callGeminiAPI(promptText) {
+      await new Promise(res => setTimeout(res, 1500)); // Delay to simulate longer generation
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+        });
+      const data = await res.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || "No story generated.";
+    }
+
+    generateBtn.addEventListener('click', async () => {
+      const userPrompt = promptInput.value.trim();
+      const partCount = partSlider.value;
+      if (!userPrompt) return alert('Enter a story prompt.');
+
+      showScreen('storyScreen');
+      storyDiv.innerHTML = 'Generating story...';
+      optionsDiv.innerHTML = '';
+
+      const storyPrompt = `Write a creative story based on this prompt in ${partCount} parts. Prompt: ${userPrompt}`;
+      currentStory = await callGeminiAPI(storyPrompt);
+      storyDiv.innerHTML = `<p>${currentStory.replace(/\n/g, "<br>")}</p>`;
+
+      storyHistory.push(currentStory);
+      localStorage.setItem('storyHistory', JSON.stringify(storyHistory));
+
+      const optionPrompt = `Give two ways this story can continue: ${currentStory}`;
+      const options = await callGeminiAPI(optionPrompt);
+      const [opt1, opt2] = options.split(/\n/).filter(Boolean).slice(0, 2);
+
+      if (opt1 && opt2) {
+        optionsDiv.innerHTML = `
+          <button class="option-btn" onclick="continueStory(\`${opt1}\`)">${opt1}</button>
+          <button class="option-btn" onclick="continueStory(\`${opt2}\`)">${opt2}</button>
+        `;
+      }
+    });
+
+    window.continueStory = async function(choice) {
+      storyDiv.innerHTML += `<hr><strong>➡ ${choice}</strong><br>Loading...`;
+      optionsDiv.innerHTML = '';
+      const nextPartPrompt = `Continue this story: ${currentStory}\n\nContinue with: ${choice}`;
+      const continuation = await callGeminiAPI(nextPartPrompt);
+      storyDiv.innerHTML += `<p>${continuation.replace(/\n/g, "<br>")}</p>`;
+      currentStory += '\n' + continuation;
+    }
+  </script>
+</body>
+</html>
