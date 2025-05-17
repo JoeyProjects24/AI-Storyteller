@@ -546,37 +546,55 @@ ttsBtn.addEventListener('click', () => {
     return alert('Sorry, your browser does not support text-to-speech.');
   }
 
-  if (!isSpeaking) {
-    // Start speaking
-    window.speechSynthesis.cancel(); // just in case
-    utterance = new SpeechSynthesisUtterance(currentStory);
-    utterance.lang = 'en-US';
-    utterance.rate = 1;
+  const sentences = currentStory.match(/[^.!?]+[.!?]+/g) || [currentStory]; // Split into sentences
+  let index = 0;
+  isSpeaking = true;
+  ttsBtn.textContent = '🔇';
 
-    utterance.onstart = () => {
-      isSpeaking = true;
-      ttsBtn.textContent = '🔇';  // Update button text or icon
-    };
-
-    utterance.onend = () => {
+  function speakNextSentence() {
+    if (index >= sentences.length) {
       isSpeaking = false;
       ttsBtn.textContent = '↻';
+      storyDiv.innerHTML = `<p>${currentStory.replace(/\n/g, "<br>")}</p>`;
+      return;
+    }
+
+    const highlightedHTML = sentences
+      .map((s, i) =>
+        `<span style="${i === index ? 'background-color: rgba(255, 255, 0, 0.4);' : ''}">${s}</span>
+`
+      )
+      .join(" ");
+    storyDiv.innerHTML = `<p>${highlightedHTML}</p>`;
+
+    const utter = new SpeechSynthesisUtterance(sentences[index]);
+    utter.lang = 'en-US';
+    utter.rate = 1;
+
+    utter.onend = () => {
+      index++;
+      speakNextSentence();
     };
 
-    utterance.onerror = () => {
+    utter.onerror = () => {
       isSpeaking = false;
       ttsBtn.textContent = '↻';
-      alert('Start over again!');
+      alert('An error occurred during speech synthesis.');
     };
 
-    window.speechSynthesis.speak(utterance);
-  } else {
-    // Stop speaking
-    window.speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+  }
+
+  // Stop if already speaking
+  if (speechSynthesis.speaking) {
+    speechSynthesis.cancel();
     isSpeaking = false;
     ttsBtn.textContent = '↻';
+  } else {
+    speakNextSentence(); // Start the speaking process
   }
 });
+
 
 
   </script>
