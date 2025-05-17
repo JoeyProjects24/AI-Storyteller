@@ -1,1141 +1,600 @@
-<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8" />  <meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">  <title>AI Storyteller</title><style>
-  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <title>AI Storyteller</title>
+<style>
 /* iOS Theme - Clean & Professional */
-  
 :root {
-  
   --bg-color: #fff;
-  
   --text-color: #333;
-  
   --card-color: #e3e3e3;
-  
   --primary: #333;
-  
   --primary-dark: #222;
-  
   --input-bg: #f2f2f7;
-  
   --border-color: #d1d1d6;
-  
   --accent: #333;
-  
 }
-  
 
-  
 .dark-mode {
-  
   --bg-color: #333;
-  
   --text-color: #fff;
-  
   --card-color: #1c1c1e;
-  
   --input-bg: #2c2c2e;
-  
   --border-color: #3a3a3c;
-  
   --accent: #fff;
-  
 }
-  
 
-  
 h1, h2, h3, .title {
-  
   font-family: 'Montserrat', sans-serif;
-  
 }
-  
 
-  
 
-  
 /* Base reset with iOS system fonts */
-  
 body {
-  
 font-family: 'Montserrat', sans-serif;
-  
 font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  
   background-color: var(--bg-color);
-  
   color: var(--text-color);
-  
   margin: 0;
-  
   padding: 0;
-  
   -webkit-font-smoothing: antialiased;
-  
   -moz-osx-font-smoothing: grayscale;
-  
   line-height: 1.5;
-  
 }
-  
 
-  
 /* Container screen with iOS-style card */
-  
 .screen { 
-  
   max-width: 400px;
-  
   margin: 5rem auto;
-  
   padding: 1rem;
-  
   background: var(--card-color);
-  
   border-radius: 12px;
-  
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  
   display: none;
-  
   animation: fadeIn 0.3s ease-out;
-  
 }
-  
 
-  
 .active {
-  
   display: block;
-  
 }
-  
 
-  
 @keyframes fadeIn {
-  
   from { opacity: 0; transform: translateY(10px); }
-  
   to { opacity: 1; transform: translateY(0); }
-  
 }
-  
 
-  
 /* Top controls with iOS-style navigation */
-  
 .top-controls {
-  
   max-width: 420px;
-  
   margin: 1rem auto 0;
-  
   padding: 0 1rem;
-  
   display: flex;
-  
   justify-content: space-between;
-  
   gap: 0.5rem;
-  
 }
-  
 
-  
 /* Story Text Formatting - Clean iOS style */
-  
 #story {
-  
   background: var(--card-color);
-  
   padding: 1rem;
-  
   border-radius: 12px;
-  
   font-size: 17px;
-  
   line-height: 1.6;
-  
   letter-spacing: -0.01em;
-  
   color: var(--text-color);
-  
   font-weight: 400;
-  
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  
   text-align: left;
-  
   white-space: pre-wrap;
-  
   word-wrap: break-word;
-  
 font-family: 'Montserrat', sans-serif;
-  
   hyphens: auto;
-  
 }
-  
 
-  
 /* Paragraph spacing with subtle indent */
-  
 #story p {
-  
   margin: 1em 0;
-  
 font-family: 'Montserrat', sans-serif;
-  
   text-indent: 0;
-  
   text-align: justify;
-  
 }
-  
 
-  
 /* Smart bold highlighting */
-  
 #story strong {
-  
   font-weight: 600;
-  
   color: var(--text-color);
-  
   background-color: rgba(0, 0, 0, 0.05);
-  
   padding: 0.15em 0.3em;
-  
 font-family: 'Montserrat', sans-serif;
-  
   border-radius: 4px;
-  
   display: inline;
-  
 }
-  
 
-  
 .dark-mode #story strong {
-  
   background-color: rgba(255, 255, 255, 0.1);
-  
 }
-  
 
-  
 /* Section breaks */
-  
 #story hr {
-  
   border: none;
-  
 font-family: 'Montserrat', sans-serif;
-  
   height: 1px;
-  
   background-color: var(--border-color);
-  
   margin: 1.5rem 0;
-  
   opacity: 0.5;
-  
 }
-  
 
-  
 /* Quotes styling */
-  
 #story blockquote {
-  
   margin: 1.5rem 0;
-  
   padding: 0 1rem;
-  
   border-left: 3px solid var(--border-color);
-  
   color: var(--text-color);
-  
   font-style: italic;
-  
   opacity: 0.9;
-  
 }
-  
 
-  
 /* Input fields - iOS style */
-  
 input[type="text"] {
-  
   font-size: 17px;
-  
   padding: 12px 16px;
-  
   border-radius: 10px;
-  
   border: none;
-  
   background: var(--input-bg);
-  
   color: var(--text-color);
-  
   width: 100%;
-  
   box-sizing: border-box;
-  
   outline: none;
-  
   margin: 0.5rem 0;
-  
   transition: all 0.2s ease;
-  
 }
-  
 
-  
 input:focus {
-  
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-  
 }
-  
 
-  
 /* Range slider - iOS style */
-  
 input[type="range"] {
-  
   -webkit-appearance: none;
-  
   width: 100%;
-  
   height: 20px;
-  
   border-radius: 100px;
-  
   background: var(--border-color);
-  
   outline: none;
-  
   margin: 2rem 0;
-  
 }
-  
 
-  
 input[type="range"]::-webkit-slider-thumb {
-  
   -webkit-appearance: none;
-  
   appearance: none;
-  
   width: 20px;
-  
   height: 20px;
-  
   background: white;
-  
   border-radius: 50%;
-  
   cursor: pointer;
-  
   border: none;
-  
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
   transition: transform 0.1s ease;
-  
 }
-  
 
-  
 input[type="range"]::-webkit-slider-thumb:active {
-  
   transform: scale(1.1);
-  
 }
-  
 
-  
 /* Buttons - iOS style */
-  
 button, .option-btn {
-  
   font-size: 17px;
-  
   font-weight: 500;
-  
   background: var(--primary);
-  
   color: #fff;
-  
   padding: 12px 20px;
-  
   border: none;
-  
   border-radius: 10px;
-  
   cursor: pointer;
-  
   transition: all 0.2s ease;
-  
   user-select: none;
-  
   -webkit-tap-highlight-color: transparent;
-  
   width: 100%;
-  
   margin: 0.5rem 0;
-  
 }
-  
 
-  
 button:hover, .option-btn:hover {
-  
   background: var(--primary-dark);
-  
   transform: translateY(-1px);
-  
 }
-  
 
-  
 button:active, .option-btn:active {
-  
   transform: translateY(0);
-  
   opacity: 0.9;
-  
 }
-  
 
-  
 /* Back buttons */
-  
 .back-btn {
-  
   font-size: 17px;
-  
   background: none;
-  
   border: none;
-  
   color: var(--primary);
-  
   padding: 0;
-  
   margin: 0 0 1rem 0;
-  
   cursor: pointer;
-  
   font-weight: 500;
-  
 font-family: 'Montserrat', sans-serif;
-  
 height: 40px;
-  
 }
-  
 
-  
 /* History items */
-  
 #historyList p {
-  
 font-family: 'Montserrat', sans-serif;
-  
   background: var(--input-bg);
-  
   padding: 12px 16px;
-  
   margin: 8px 0;
-  
   border-radius: 10px;
-  
   cursor: pointer;
-  
   font-weight: 400;
-  
   transition: all 0.2s ease;
-  
   color: var(--text-color);
-  
 }
-  
 
-  
 #historyList p:hover {
-  
 font-family: 'Montserrat', sans-serif;
-  
   background: var(--border-color);
-  
 }
-  
 
-  
 
-  
 .floating-theme-btn {
-  
   position: fixed;
-  
   bottom: 20px;
-  
   left: 20px;
-  
   width: 50px;
-  
   height: 50px;
-  
   background-color: var(--primary);
-  
   color: #fff;
-  
   border: none;
-  
   border-radius: 50%;
-  
   font-size: 22px;
-  
   font-weight: bold;
-  
   cursor: pointer;
-  
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  
   z-index: 999;
-  
   transition: background 0.3s ease, transform 0.2s ease;
-  
 
-  
   /* Center icon */
-  
   display: flex;
-  
   align-items: center;
-  
   justify-content: center;
-  
   padding: 0;
-  
 }
-  
 
-  
 .floating-theme-btn:hover {
-  
   background-color: var(--primary-dark);
-  
   transform: scale(1.05);
-  
 }
-  
 
-  
 .floating-theme-btn:active {
-  
   transform: scale(0.95);
-  
 }
-  
 
-  
 
-  
 body.dark-mode {
-  
   background-color: #121212;
-  
   color: #eee;
-  
 }
-  
 
-  
 body.dark-mode button {
-  
   background-color: #333;
-  
   color: #fff;
-  
 }
-  
 
-  
 .top-right-btn {
-  
   position: fixed;
-  
   top: 12px;
-  
   right: 12px;
-  
   font-size: 12px;
-  
   padding: 6px 10px;
-  
   background-color: var(--primary-color, #333);
-  
   color: #fff;
-  
   border: none;
-  
   border-radius: 6px;
-  
   cursor: pointer;
-  
   z-index: 1000;
-  
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  
   opacity: 0.85;
-  
   transition: opacity 0.3s ease;
-  
   width: 85px;
-  
   height: 35px;
-  
 }
-  
 
-  
 .top-right-btn:hover {
-  
   opacity: 1;
-  
 }
-  
 
-  
 #ttsBtn {
-  
   width: 40px;
-  
   height: 40px;
-  
   border-radius: 50%;
-  
   background-color: var(--primary);
-  
   color: white;
-  
   border: none;
-  
   cursor: pointer;
-  
   font-size: 20px;
-  
   display: flex;
-  
   align-items: center;
-  
   justify-content: center;
-  
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  
   transition: background-color 0.2s ease;
-  
 }
-  
 
-  
 #ttsBtn:hover {
-  
   background-color: var(--primary-dark);
-  
 }
-  
 
-  
 
-  
 /* Responsive adjustments */
-  
 @media (max-width: 480px) {
-  
   .screen {
-  
     
-  
     margin-left:1rem;
-  
     margin-right:1rem;
-  
     border-radius: 10px;
-  
   }
-  
-  
   
   #story {
-  
     font-size: 16px;
-  
   }
-  
-  
   
   button, input[type="text"] {
-  
     font-size: 16px;
-  
     padding: 10px 16px;
-  
   }
-  
 }
-  
-</style></head><body>  <div class="top-controls"><button class="floating-theme-btn" style="font-family: 'Montserrat', sans-serif;" id="toggleDarkMode">
-
-  <span id="themeIcon">🌙</span>
-
-</button>
-
-<button class="top-right-btn" style="font-family: 'Montserrat', sans-serif;" id="viewHistory">History ⌛</button>
-
-  </div>  <!-- Home Screen -->  <div id="homeScreen" class="screen active"><div class="homeContent">
-
-<h1 style="text-align:center; font-weight: 500;">AI Storyteller</h1>
-
-<div style="text-align:center;">
-
-  <input style="font-family: 'Montserrat', sans-serif; font-size: 16px; margin-bottom: 20px;" id="prompt" type="text" placeholder="Enter your story prompt..." />
-
-  <div>
-
-    <label>Story Length: <span id="partValue">4</span></label><br>
-
-    <input type="range" id="partCount" min="3" max="10" value="4">
-
+</style>
+</head>
+<body>
+  <div class="top-controls">
+    <button class="floating-theme-btn" style="font-family: 'Montserrat', sans-serif;" id="toggleDarkMode">
+      <span id="themeIcon">🌙</span>
+    </button>
+    <button class="top-right-btn" style="font-family: 'Montserrat', sans-serif;" id="viewHistory">History ⌛</button>
   </div>
 
-  <button style="font-family: 'Montserrat', sans-serif; font-weight: 500; width: 200px;" id="generate">Generate Story</button>
+  <!-- Home Screen -->
+  <div id="homeScreen" class="screen active">
+    <div class="homeContent">
+    <h1 style="text-align:center; font-weight: 500;">AI Storyteller</h1>
+    <div style="text-align:center;">
+      <input style="font-family: 'Montserrat', sans-serif; font-size: 16px; margin-bottom: 20px;" id="prompt" type="text" placeholder="Enter your story prompt..." />
+      <div>
+        <label>Story Length: <span id="partValue">4</span></label><br>
+        <input type="range" id="partCount" min="3" max="10" value="4">
+      </div>
+      <button style="font-family: 'Montserrat', sans-serif; font-weight: 500; width: 200px;" id="generate">Generate Story</button>
+    </div>
+    </div>
+  </div>
 
-</div>
+  <!-- Story Screen -->
+  <div id="storyScreen" class="screen">
+    <button class="back-btn" id="backToHome1">◄ Back</button>
+    <button class="back-btn" id="exportStory">Export as .txt</button>
 
-</div>
-
-  </div>  <!-- Story Screen -->  <div id="storyScreen" class="screen"><button class="back-btn" id="backToHome1">◄ Back</button>
-
-<button class="back-btn" id="exportStory">Export as .txt</button>
-
+    <button id="ttsBtn" title="Read story aloud" aria-label="Text to Speech" style="margin-bottom: 12px;">🔊</button>
 
 
-<button id="ttsBtn" title="Read story aloud" aria-label="Text to Speech" style="margin-bottom: 12px;">🔊</button>
+    <div id="story"></div>
+    <div id="options"></div>
+  </div>
 
+  <!-- History Screen -->
+  <div style="font-family: 'Montserrat', sans-serif;" id="historyScreen" class="screen">
+    <button class="back-btn" id="backToHome2">◄ Back</button>
+    <button id="clearHistory">🗑 Delete History</button>
+    <div id="historyList"></div>
+  </div>
 
-
-
-
-<div id="story"></div>
-
-<div id="options"></div>
-
-  </div>  <!-- History Screen -->  <div style="font-family: 'Montserrat', sans-serif;" id="historyScreen" class="screen"><button class="back-btn" id="backToHome2">◄ Back</button>
-
-<button id="clearHistory">🗑 Delete History</button>
-
-<div id="historyList"></div>
-
-  </div>  <script type="module">
-  
+  <script type="module">
     const API_KEY = 'AIzaSyBQy3ins1gqIiNBzKj2cXJcjwe2nuRYJws';
-  
 
-  
     const screens = {
-  
       homeScreen: document.getElementById('homeScreen'),
-  
       storyScreen: document.getElementById('storyScreen'),
-  
       historyScreen: document.getElementById('historyScreen')
-  
     };
-  
 
-  
     const promptInput = document.getElementById('prompt');
-  
     const partSlider = document.getElementById('partCount');
-  
     const partValueDisplay = document.getElementById('partValue');
-  
     const storyDiv = document.getElementById('story');
-  
     const optionsDiv = document.getElementById('options');
-  
     const historyList = document.getElementById('historyList');
-  
 
-  
     const generateBtn = document.getElementById('generate');
-  
     const viewHistoryBtn = document.getElementById('viewHistory');
-  
     const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
-  
     const exportStoryBtn = document.getElementById('exportStory');
-  
     const clearHistoryBtn = document.getElementById('clearHistory');
-  
 
-  
     let currentStory = '';
-  
     let storyHistory = JSON.parse(localStorage.getItem('storyHistory') || '[]');
-  
 
-  
     function showScreen(screenId) {
-  
       Object.values(screens).forEach(screen => screen.classList.remove('active'));
-  
       screens[screenId].classList.add('active');
-  
     }
-  
 
-  
     partSlider.addEventListener('input', () => {
-  
       partValueDisplay.textContent = partSlider.value;
-  
     });
-  
 
-  
  const themeIcon = document.getElementById('themeIcon');
-  
 
-  
 // Set initial theme from localStorage
-  
 window.addEventListener('DOMContentLoaded', () => {
-  
   const savedTheme = localStorage.getItem('theme');
-  
   if (savedTheme === 'dark') {
-  
     document.body.classList.add('dark-mode');
-  
     themeIcon.textContent = '☀️';
-  
   } else {
-  
     themeIcon.textContent = '🌙';
-  
   }
-  
 });
-  
 
-  
 toggleDarkModeBtn.addEventListener('click', () => {
-  
   const isDarkMode = document.body.classList.toggle('dark-mode');
-  
   themeIcon.textContent = isDarkMode ? '☀️' : '🌙';
-  
   localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-  
 });
-  
 
-  
     exportStoryBtn.addEventListener('click', () => {
-  
       const blob = new Blob([currentStory], { type: 'text/plain' });
-  
       const a = document.createElement('a');
-  
       a.href = URL.createObjectURL(blob);
-  
       a.download = 'story.txt';
-  
       a.click();
-  
     });
-  
 
-  
     document.getElementById('backToHome1').onclick = () => showScreen('homeScreen');
-  
     document.getElementById('backToHome2').onclick = () => showScreen('homeScreen');
-  
 
-  
     viewHistoryBtn.addEventListener('click', () => {
-  
       showScreen('historyScreen');
-  
       renderHistory();
-  
     });
-  
 
-  
     clearHistoryBtn.addEventListener('click', () => {
-  
       if (confirm('Are you sure you want to delete all story history?')) {
-  
         storyHistory = [];
-  
         localStorage.removeItem('storyHistory');
-  
         renderHistory();
-  
       }
-  
     });
-  
 
-  
     function renderHistory() {
-  
       historyList.innerHTML = storyHistory.length
-  
         ? storyHistory.map((s, i) => `<p onclick="loadStory(${i})">#${i + 1}: ${s.slice(0, 100)}...</p>`).join('')
-  
         : '<p>No story history yet.</p>';
-  
     }
-  
 
-  
     function loadStory(index) {
-  
       currentStory = storyHistory[index];
-  
       storyDiv.innerHTML = `<p>${currentStory.replace(/\n/g, "<br>")}</p>`;
-  
       optionsDiv.innerHTML = '';
-  
       showScreen('storyScreen');
-  
     }
-  
 
-  
     async function callGeminiAPI(promptText) {
-  
       await new Promise(res => setTimeout(res, 1500)); // Delay to simulate longer generation
-  
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
-  
         {
-  
           method: 'POST',
-  
           headers: { 'Content-Type': 'application/json' },
-  
           body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
-  
         });
-  
       const data = await res.json();
-  
       return data.candidates?.[0]?.content?.parts?.[0]?.text || "No story generated.";
-  
     }
-  
 
-  
     generateBtn.addEventListener('click', async () => {
-  
       const userPrompt = promptInput.value.trim();
-  
       const partCount = partSlider.value;
-  
       if (!userPrompt) return alert('Enter a story prompt.');
-  
 
-  
       showScreen('storyScreen');
-  
       storyDiv.innerHTML = 'Generating story...';
-  
       optionsDiv.innerHTML = '';
-  
 
-  
       const storyPrompt = `Write a creative story based on this prompt in min 50 to max 300 lines ${partCount} Prompt: ${userPrompt}`;
-  
       currentStory = await callGeminiAPI(storyPrompt);
-  
       storyDiv.innerHTML = `<p>${currentStory.replace(/\n/g, "<br>")}</p>`;
-  
 
-  
       storyHistory.push(currentStory);
-  
       localStorage.setItem('storyHistory', JSON.stringify(storyHistory));
-  
 
-  
       const optionPrompt = `Give two ways this story can continue: ${currentStory}`;
-  
       const options = await callGeminiAPI(optionPrompt);
-  
       const [opt1, opt2] = options.split(/\n/).filter(Boolean).slice(0, 2);
-  
 
-  
       if (opt1 && opt2) {
-  
         optionsDiv.innerHTML = `
-  
           <button class="option-btn" onclick="continueStory(\`${opt1}\`)">${opt1}</button>
-  
           <button class="option-btn" onclick="continueStory(\`${opt2}\`)">${opt2}</button>
-  
         `;
-  
       }
-  
     });
-  
 
-  
     window.continueStory = async function(choice) {
-  
       storyDiv.innerHTML += `<hr><strong>➡ ${choice}</strong><br>Loading...`;
-  
       optionsDiv.innerHTML = '';
-  
       const nextPartPrompt = `Continue this story: ${currentStory}\n\nContinue with: ${choice}`;
-  
       const continuation = await callGeminiAPI(nextPartPrompt);
-  
       storyDiv.innerHTML += `<p>${continuation.replace(/\n/g, "<br>")}</p>`;
-  
       currentStory += '\n' + continuation;
-  
     }
-  
 
-  
 const ttsBtn = document.getElementById('ttsBtn');
-  
 let isSpeaking = false;
-  
 let utterance = null;
-  
 
-  
 ttsBtn.addEventListener('click', () => {
-  
   if (!currentStory) return alert('No story to read.');
-  
 
-  
   if (!('speechSynthesis' in window)) {
-  
     return alert('Sorry, your browser does not support text-to-speech.');
-  
   }
-  
 
-  
   const sentences = currentStory.match(/[^.!?]+[.!?]+/g) || [currentStory]; // Split into sentences
-  
   let index = 0;
-  
   isSpeaking = true;
-  
   ttsBtn.textContent = '🔇';
-  
 
-  
   function speakNextSentence() {
-  
     if (index >= sentences.length) {
-  
       isSpeaking = false;
-  
       ttsBtn.textContent = '↻';
-  
       storyDiv.innerHTML = `<p>${currentStory.replace(/\n/g, "<br>")}</p>`;
-  
       return;
-  
     }
-  
 
-  
     const highlightedHTML = sentences
-  
       .map((s, i) =>
-  
         `<span style="${i === index ? 'background-color: rgba(255, 255, 0, 0.4);' : ''}">${s}</span>
-  
 `
-  
       )
-  
       .join(" ");
-  
     storyDiv.innerHTML = `<p>${highlightedHTML}</p>`;
-  
 
-  
     const utter = new SpeechSynthesisUtterance(sentences[index]);
-  
     utter.lang = 'en-US';
-  
     utter.rate = 1;
-  
 
-  
     utter.onend = () => {
-  
       index++;
-  
       speakNextSentence();
-  
     };
-  
 
-  
     utter.onerror = () => {
-  
       isSpeaking = false;
-  
       ttsBtn.textContent = '↻';
-  
-      alert('An error occurred during speech synthesis.');
-  
+      alert('Start over again!');
     };
-  
 
-  
     speechSynthesis.speak(utter);
-  
   }
-  
 
-  
   // Stop if already speaking
-  
   if (speechSynthesis.speaking) {
-  
     speechSynthesis.cancel();
-  
     isSpeaking = false;
-  
     ttsBtn.textContent = '↻';
-  
   } else {
-  
     speakNextSentence(); // Start the speaking process
-  
   }
-  
 });
-  
 
-  
-  </script></body></html>
+  </script>
+</body>
+</html>
