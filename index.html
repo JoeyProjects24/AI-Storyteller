@@ -369,7 +369,7 @@ body.dark-mode button {
     <div style="text-align:center;">
       <input style="font-family: 'Montserrat', sans-serif; font-size: 16px; margin-bottom: 20px;" id="prompt" type="text" placeholder="Enter your story prompt..." />
       <div>
-        <label>Story Length:<span id="partValue">4</span></label><br>
+        <label>Story Length: <span id="partValue">4</span></label><br>
         <input type="range" id="partCount" min="3" max="10" value="4">
       </div>
       <button style="font-family: 'Montserrat', sans-serif; font-weight: 500; width: 200px;" id="generate">Generate Story</button>
@@ -579,7 +579,7 @@ ttsBtn.addEventListener('click', () => {
     utter.onerror = () => {
       isSpeaking = false;
       ttsBtn.textContent = '↻';
-      alert('An error occurred during speech synthesis.');
+      alert('Start over again!);
     };
 
     speechSynthesis.speak(utter);
