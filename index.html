@@ -579,7 +579,7 @@ ttsBtn.addEventListener('click', () => {
     utter.onerror = () => {
       isSpeaking = false;
       ttsBtn.textContent = '↻';
-      alert('Start over again!);
+      alert('Start over again!');
     };
 
     speechSynthesis.speak(utter);
